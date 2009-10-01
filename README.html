@@ -1,0 +1,58 @@
+<html>
+
+<head>
+<title>Message CXF - README</title>
+</head>
+
+<body>
+<h1>Message CXF - README</h1>
+
+<h2>Running the unit test</h2>
+<p> This will download all dependencies, compile the project, and run your project on a jetty instance. <b>NOTE: THIS WILL TAKE QUITE SOME TIME THE FIRST RUN SINCE MAVEN WILL DOWNLOAD ALL THE DEPENDENCIES INCLUDING YOUR SERVELET CONTAINER (JETTY).</b></p>
+<p>Run the test in the folder <b>src/test/java</b> in the usual way.
+
+<h2 id="strtjetty">Starting Jetty</h2>
+<ul>
+	<li>To run the maven commands, right-click on the project and choose <b>Run As > Maven build...</b></li>
+	<li>In the <em>Goals</em> field, enter <b>clean jetty:run</b></li>
+</ul>
+
+<h2>Running the Hello World Example</h2>
+<ul>
+	<li><a href="#strtjetty">Start Jetty</a></li>
+	<li>Observe the wsdl is automatically automatically generated <a target="_blank" href="http://localhost:8080/message-cxf/MessageService?wsdl">http://localhost:8080/message-cxf/MessageService?wsdl</a>
+	<li>View it working at <a target="_blank" href="http://localhost:8080/message-cxf/MessageService/getMessage?message=ThisMessageDoesntMatterSinceItIsHelloWorldImplementation">http://localhost:8080/message-cxf/MessageService/getMessage?message=ThisMessageDoesntMatterSinceItIsHelloWorldImplementation</a> You should see output similar as below:
+<pre>
+&lt;soap:Envelope&gt;
+ 	&lt;soap:Body&gt;
+		&lt;ns1:getMessageResponse&gt;
+			&lt;return>Hello World&lt;/return&gt;
+		&lt;/ns1:getMessageResponse&gt;
+	&lt;/soap:Body&gt;
+&lt;/soap:Envelope&gt;
+</pre>
+	</li>
+</ul>
+
+<h2>Running the Member Variable Example</h2>
+You can switch the MessageService implementations by editing <b>src/main/webapp/WEB-INF/applicationContext-cxf.xml</b>.
+<ul>
+	<li>Ensure you have stopped jetty (use the red button in the Maven build console)</li>
+	<li>Change the jaxws:endpoint's implementor attribute. It will change from <i>&lt;jaxws:endpoint id="messageService" implementor="<b>#helloWorldMessageService</b>"</i> to <i>&lt;jaxws:endpoint id="messageService" implementor="<b>#memberVariableMessageService</b>"</i>
+	<li><a href="#strtjetty">Start Jetty</a></li>
+	<li>Observe the wsdl is still the same (it is based off the interface) and it is still automatically automatically generated <a target="_blank" href="http://localhost:8080/message-cxf/MessageService?wsdl">http://localhost:8080/message-cxf/MessageService?wsdl</a>
+	<li>View it working at <a target="_blank" href="http://localhost:8080/message-cxf/MessageService/getMessage?message=ThisMessageDoesntMatterSinceItIsHelloWorldImplementation">http://localhost:8080/message-cxf/MessageService/getMessage?message=ThisMessageDoesntMatterSinceItIsHelloWorldImplementation</a> You should see output similar as below:
+<pre>
+&lt;soap:Envelope&gt;
+ 	&lt;soap:Body&gt;
+		&lt;ns1:getMessageResponse&gt;
+			&lt;return>The argument passed in is ThisMessageDoesntMatterSinceItIsHelloWorldImplementation.&lt;/return&gt;
+		&lt;/ns1:getMessageResponse&gt;
+	&lt;/soap:Body&gt;
+&lt;/soap:Envelope&gt;
+</pre>
+	</li>
+<ul>
+
+</body>
+</html>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:cxf="http://cxf.apache.org/core"
+	xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd 
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
+
+	<import resource="classpath:META-INF/cxf/cxf.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-extension-http.xml" />
+
+	<!-- You can change "#helloWorldMessageService" to "#memberVariableMessageService" and it will use the member variable message service -->
+	<!-- You can also change it to "#sessionEnabledMessageService" and it will use the session-enabled message service -->
+	<jaxws:endpoint id="messageService" implementor="#timeDelayedMessageService"
+		implementorClass="winch.example.message.MessageService"
+		address="/MessageService">
+		<jaxws:serviceFactory>
+			<ref bean="service-factory" />
+		</jaxws:serviceFactory>
+	</jaxws:endpoint>
+
+	<!-- provides logging for the cxf bus (observe the input and output logging on the consule as you access the service) -->
+	<cxf:bus>
+		<cxf:features>
+			<cxf:logging />
+		</cxf:features>
+	</cxf:bus>
+
+	<!-- Specify we want the agegis data binding...this is how wsdl's are automatically automatically created -->
+	<bean id="aegisBean"
+		class="org.apache.cxf.aegis.databinding.AegisDatabinding" />
+
+	<!-- Here we have two different implementations of the Message Service, update the jaxws:endpoint to switch implementations by
+		 changing the implementor attribute as described by the comment above jaxws:endpoint -->
+	<bean id="helloWorldMessageService" class="winch.example.message.HelloWorldMessageService"/>
+
+	<bean id="memberVariableMessageService" class="winch.example.message.MemberVariableMessageService">
+		<property name="pattern" value="The argument passed in is {0}."/>
+	</bean>
+
+	<bean id="timeDelayedMessageService" class="winch.example.message.TimeDelayedMessageService">
+		<property name="pattern" value="The argument passed in is {0}."/>
+	</bean>
+
+	<bean id="sessionEnabledMessageService" class="winch.example.message.SessionEnabledMessageService"/>
+
+	<bean id="springStatefulMessageService" class="winch.example.message.SpringStatefulMessageService" scope="session">
+		<aop:scoped-proxy/>
+		<property name="count">
+			<bean class="winch.example.message.Count"/>
+		</property>
+	</bean>
+
+	<bean id="service-factory"
+		class="org.apache.cxf.jaxws.support.JaxWsServiceFactoryBean">
+		<!-- our data binding is AegisDataBinding which does the magic of translating everything automatically automatically -->
+		<property name="dataBinding" ref="aegisBean" />
+		<property name="serviceConfigurations">
+			<list>
+				<bean
+					class="org.apache.cxf.jaxws.support.JaxWsServiceConfiguration" />
+				<bean
+					class="org.apache.cxf.aegis.databinding.AegisServiceConfiguration" />
+				<bean
+					class="org.apache.cxf.service.factory.DefaultServiceConfiguration" />
+			</list>
+		</property>
+	</bean>
+</beans>
