@@ -4,7 +4,7 @@
 	xmlns:cxf="http://cxf.apache.org/core"
 	xmlns:jaxws="http://cxf.apache.org/jaxws"
 	xmlns:aop="http://www.springframework.org/schema/aop"
-	xsi:schemaLocation="http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd 
+	xsi:schemaLocation="http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
 http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
 http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
@@ -16,7 +16,7 @@ http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
 
 	<!-- You can change "#helloWorldMessageService" to "#memberVariableMessageService" and it will use the member variable message service -->
 	<!-- You can also change it to "#sessionEnabledMessageService" and it will use the session-enabled message service -->
-	<jaxws:endpoint id="messageService" implementor="#timeDelayedMessageService"
+	<jaxws:endpoint id="messageService" implementor="#sessionEnabledMessageService"
 		implementorClass="winch.example.message.MessageService"
 		address="/MessageService">
 		<jaxws:serviceFactory>
